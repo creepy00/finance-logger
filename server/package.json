@@ -46,6 +46,7 @@
     "feathers-rest": "^1.8.1",
     "feathers-socketio": "^2.0.1",
     "helmet": "^3.9.0",
+    "moment": "^2.19.3",
     "mongodb": "^2.2.33",
     "mongoose": "^4.13.6",
     "passport-facebook": "^2.1.1",

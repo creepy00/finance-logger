@@ -3,6 +3,14 @@ const { restrictToOwner } = require('feathers-authentication-hooks');
 const commonHooks = require('feathers-hooks-common');
 const Validator = require('../../libraries/Validator');
 
+const restrict = [
+  authenticate('jwt'),
+  restrictToOwner({
+    idField: '_id',
+    ownerField: 'userId'
+  })
+];
+
 const fields = {
   'name': ['required'],
   'type': ['required'],
@@ -23,23 +31,15 @@ const addUser = hook => {
   return hook;
 };
 
-const restrict = [
-  authenticate('jwt'),
-  restrictToOwner({
-    idField: '_id',
-    ownerField: 'userId'
-  })
-];
-
 module.exports = {
   before: {
     all: [  ],
     find: [ ...restrict ],
     get: [ ...restrict ],
-    create: [ authenticate('jwt'), ...validations, addUser ],
-    update: [ ...restrict, ...validations, addUser ],
-    patch: [ ...restrict ],
-    remove: [ ...restrict ]
+    create: [...restrict, ...validations, addUser ],
+    update: [...restrict, ...validations, addUser ],
+    patch: [...restrict ],
+    remove: [...restrict ]
   },
 
   after: {
