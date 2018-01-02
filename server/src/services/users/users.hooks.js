@@ -20,8 +20,6 @@ const fields = {
   'repeatPassword': ['required', {
     name: 'customValidator',
     customValidator(value, key, options, data) {
-      console.log(value);
-      console.log(data);
       if (value === data['password']) {
         return true;
       } else {
@@ -43,7 +41,7 @@ module.exports = {
     all: [],
     find: [ authenticate('jwt') ],
     get: [ ...restrict ],
-    create: [ ...validations, hashPassword() ],
+    create: [ ...validations, commonHooks.discard('repeatPassword'), hashPassword() ],
     update: [ ...restrict, ...validations, hashPassword() ],
     patch: [ ...restrict, hashPassword() ],
     remove: [ ...restrict ]
