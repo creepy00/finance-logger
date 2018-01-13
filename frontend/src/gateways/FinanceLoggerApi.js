@@ -1,5 +1,6 @@
-import axios from "axios";
+/* eslint-disable */
 
+import axios from "axios";
 const axiosConfig = {
   baseURL: "/api",
   timeout: 15000,
