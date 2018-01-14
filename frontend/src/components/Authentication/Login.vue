@@ -55,8 +55,8 @@
     data () {
       const self = this;
       return {
-        email: self.registeredEmail ? self.registeredEmail : "goran.blazin@gmail.com",
-        password: "asdf123",
+        email: self.registeredEmail ? self.registeredEmail : "",
+        password: "",
         successAlert: !!self.registeredEmail
       };
     },

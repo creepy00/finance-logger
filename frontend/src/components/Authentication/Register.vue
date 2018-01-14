@@ -71,10 +71,10 @@
     data () {
       return {
         serverErrors: {},
-        email: "goran.blazin@gmail.com",
-        password: "asdf123",
-        repeatPassword: "asdf123",
-        fullName: "Goran Blazin"
+        email: "",
+        password: "",
+        repeatPassword: "",
+        fullName: ""
       };
     },
     computed: {
