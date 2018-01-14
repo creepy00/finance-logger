@@ -1,13 +1,13 @@
-const authentication = require('feathers-authentication');
-const jwt = require('feathers-authentication-jwt');
-const local = require('feathers-authentication-local');
-const oauth2 = require('feathers-authentication-oauth2');
-const GoogleStrategy = require('passport-google-oauth20');
-const FacebookStrategy = require('passport-facebook');
+const authentication = require("@feathersjs/authentication");
+const jwt = require("@feathersjs/authentication-jwt");
+const local = require("@feathersjs/authentication-local");
+const oauth2 = require("@feathersjs/authentication-oauth2");
+const GoogleStrategy = require("passport-google-oauth20");
+const FacebookStrategy = require("passport-facebook");
 
 module.exports = function () {
   const app = this;
-  const config = app.get('authentication');
+  const config = app.get("authentication");
 
   // Set up authentication with the secret
   app.configure(authentication(config));
@@ -15,25 +15,25 @@ module.exports = function () {
   app.configure(local());
 
   app.configure(oauth2(Object.assign({
-    name: 'google',
+    name: "google",
     Strategy: GoogleStrategy
   }, config.google)));
 
   app.configure(oauth2(Object.assign({
-    name: 'facebook',
+    name: "facebook",
     Strategy: FacebookStrategy
   }, config.facebook)));
 
   // The `authentication` service is used to create a JWT.
   // The before `create` hook registers strategies that can be used
   // to create a new valid JWT (e.g. local or oauth2)
-  app.service('/api/authentication').hooks({
+  app.service("/api/authentication").hooks({
     before: {
       create: [
         authentication.hooks.authenticate(config.strategies)
       ],
       remove: [
-        authentication.hooks.authenticate('jwt')
+        authentication.hooks.authenticate("jwt")
       ]
     }
   });

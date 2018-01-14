@@ -16,7 +16,8 @@ const router = new Router({
     {
       path: "/login",
       name: "Login",
-      component: Login
+      component: Login,
+      props: true
     },
     {
       path: "/register",
@@ -40,15 +41,21 @@ router.beforeEach((to, from, next) => {
       return "/login";
     }
 
+    if (isPublicRoute && store.getters.jwtToken) {
+      return "/";
+    }
+
     return false;
   };
 
-  const route = getNextRoute();
-  if (route) {
-    next(route);
-  } else {
-    next();
-  }
+  store.dispatch("cacheUserData").then(() => {
+    const route = getNextRoute();
+    if (route) {
+      next(route);
+    } else {
+      next();
+    }
+  });
 });
 
 export default router;

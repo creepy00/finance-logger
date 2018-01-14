@@ -1,22 +1,22 @@
-const { authenticate } = require('feathers-authentication').hooks;
-const { restrictToOwner } = require('feathers-authentication-hooks');
-const commonHooks = require('feathers-hooks-common');
-const Validator = require('../../libraries/Validator');
+const { authenticate } = require("@feathersjs/authentication").hooks;
+const { restrictToOwner } = require("feathers-authentication-hooks");
+const commonHooks = require("feathers-hooks-common");
+const Validator = require("../../libraries/Validator");
 
 const restrict = [
-  authenticate('jwt'),
+  authenticate("jwt"),
   restrictToOwner({
-    idField: '_id',
-    ownerField: 'userId'
+    idField: "_id",
+    ownerField: "userId"
   })
 ];
 
 const fields = {
-  'name': ['required'],
-  'type': ['required'],
-  'amount': ['required', 'number'],
-  'month': ['required', 'number'],
-  'year': ['required', 'number']
+  "name": ["required"],
+  "type": ["required"],
+  "amount": ["required", "number"],
+  "month": ["required", "number"],
+  "year": ["required", "number"]
 };
 
 const validations = [

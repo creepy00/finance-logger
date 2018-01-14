@@ -1,5 +1,8 @@
 <template>
   <v-container>
+    <v-alert color="success" icon="check_circle" dismissible v-model="successAlert">
+      Successfully registered {{ registeredEmail }} email
+    </v-alert>
     <form>
       <v-layout row wrap>
         <v-flex xs12>
@@ -43,15 +46,18 @@
   
   export default {
     name: "Login",
+    props: [ "registeredEmail" ],
     mixins: [validationMixin],
     validations: {
       email: { required, email },
       password: { required }
     },
     data () {
+      const self = this;
       return {
-        email: "",
-        password: ""
+        email: self.registeredEmail ? self.registeredEmail : "goran.blazin@gmail.com",
+        password: "asdf123",
+        successAlert: !!self.registeredEmail
       };
     },
     computed: {
@@ -77,7 +83,21 @@
         self.password = "";
       },
       submit () {
-        this.$v.$touch();
+        const self = this;
+        self.$v.$touch();
+        if (!self.$v.$error) {
+          self.$store.dispatch("login", {
+            loginData: {
+              "email": self.email,
+              "password": self.password,
+              "strategy": "local"
+            }
+          }).then(() => {
+            self.$router.push({
+              name: "Dashboard"
+            });
+          });
+        }
       }
     }
   };

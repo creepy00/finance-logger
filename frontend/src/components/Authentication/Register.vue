@@ -2,9 +2,6 @@
   <v-container>
     <h2>Register</h2>
     <form>
-      <v-alert color="error" icon="warning" value="true">
-        This is a error alert.
-      </v-alert>
       <v-layout row wrap>
         <v-flex xs12>
           <v-text-field
@@ -73,6 +70,7 @@
     },
     data () {
       return {
+        serverErrors: {},
         email: "goran.blazin@gmail.com",
         password: "asdf123",
         repeatPassword: "asdf123",
@@ -85,7 +83,11 @@
         if (!this.$v.email.$dirty) return errors;
         !this.$v.email.email && errors.push("Must be valid e-mail");
         !this.$v.email.required && errors.push("E-mail is required");
-        return errors;
+        if (this.serverErrors.email) {
+          return errors.concat(this.serverErrors.email);
+        } else {
+          return errors;
+        }
       },
       passwordErrors () {
         const errors = [];
@@ -123,9 +125,14 @@
               fullName: self.fullName ? self.fullName : null
             }
           }).then(() => {
-            self.$router.push("/login");
+            self.$router.push({
+              name: "Login",
+              params: {
+                registeredEmail: self.email
+              }
+            });
           }).catch(err => {
-            console.log(err);
+            self.serverErrors = err.errors;
           });
         }
       }
