@@ -52,7 +52,14 @@ const validations = [
   },
   commonHooks.validate((formValues, hook) => {
     return Validator.validateInputs(formValues, fields, hook.validationHelper);
-  })
+  }),
+  hook => {
+    if (hook.data.fullName) {
+      hook.data.fullName = hook.data.fullName.trim();
+    }
+
+    return hook;
+  }
 ];
 
 module.exports = {

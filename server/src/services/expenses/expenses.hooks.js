@@ -23,7 +23,13 @@ const validations = [
   commonHooks.pluck(...Object.keys(fields)),
   commonHooks.validate(formValues => {
     return Validator.validateInputs(formValues, fields);
-  })
+  }),
+  hook => {
+    hook.data.name = hook.data.name.trim();
+    hook.data.type = hook.data.type.trim();
+
+    return hook;
+  }
 ];
 
 const addUser = hook => {
@@ -36,7 +42,7 @@ module.exports = {
     all: [  ],
     find: [ ...restrict ],
     get: [ ...restrict ],
-    create: [...restrict, ...validations, addUser ],
+    create: [ authenticate("jwt"), ...validations, addUser ],
     update: [...restrict, ...validations, addUser ],
     patch: [...restrict ],
     remove: [...restrict ]
@@ -44,7 +50,77 @@ module.exports = {
 
   after: {
     all: [],
-    find: [],
+    find: [
+      (hook) => {
+        return hook.service.Model.distinct("type", {
+          userId: hook.params.user._id
+        }).then(result => {
+          hook.result.customTypes = result;
+
+          return hook;
+        });
+      },
+      // total expenses amount per user
+      (hook) => {
+        return new Promise((resolve, reject) => {
+          hook.service.Model.aggregate([
+            {
+              $match: {
+                userId: hook.params.user._id
+              }
+            },
+            {
+              $group: {
+                _id: null,
+                totalAmountUser: {
+                  $sum: "$amount"
+                },
+              }
+            }
+          ], (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              hook.result.totalAmountUser = result[0] ? result[0].totalAmountUser : 0;
+              resolve(hook);
+            }
+
+            return hook;
+          });
+        });
+      },
+      // get total expenses per user per passed month and year
+      (hook) => {
+        return new Promise((resolve, reject) => {
+          hook.service.Model.aggregate([
+            {
+              $match: {
+                $and: [
+                  { userId: hook.params.user._id },
+                  { month: hook.params.query.month },
+                  { year: hook.params.query.year }
+                ]
+              }
+            },
+            {
+              $group: {
+                _id: null,
+                totalAmountUserMonth: {
+                  $sum: "$amount"
+                },
+              }
+            }
+          ], (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              hook.result.totalAmountUserMonth = result[0] ? result[0].totalAmountUserMonth : 0;
+              resolve(hook);
+            }
+          });
+        });
+      }
+    ],
     get: [],
     create: [],
     update: [],
