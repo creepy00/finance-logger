@@ -32,5 +32,36 @@ export default {
     return feathers.logout().then(() => {
       commit(mutationTypes.AUTH_LOGOUT);
     });
+  },
+
+  // expenses
+  getExpensesForMonth ({ commit }, { month, year, offset = 0, limit = 100, sortBy = "name", descending = false }) {
+    return feathers.service("api/expenses").find({
+      query: {
+        month: month,
+        year: year,
+        "$limit": limit,
+        "$skip": limit * offset,
+        "$sort": {
+          [sortBy]: descending ? -1 : 1
+        }
+      }
+    });
+  },
+
+  // add new expense
+  addExpenseForMonth ({ commit }, { month, year, name, type, amount }) {
+    return feathers.service("api/expenses").create({
+      name: name,
+      type: type,
+      amount: parseInt(amount),
+      month: parseInt(month),
+      year: parseInt(year)
+    });
+  },
+
+  // delete expense
+  deleteExpense ({ commit }, { id }) {
+    return feathers.service("api/expenses").remove(id);
   }
 };

@@ -1,5 +1,5 @@
 'use strict'
 module.exports = {
   NODE_ENV: '"production"',
-  socketServer: '"/"'
+  socketServer: '"http://88.99.226.150:3030"'
 }

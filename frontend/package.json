@@ -21,6 +21,7 @@
     "@feathersjs/socketio-client": "^1.0.1",
     "axios": "^0.17.1",
     "babel-polyfill": "^6.26.0",
+    "moment": "^2.20.1",
     "vue": "^2.5.13",
     "vue-router": "^3.0.1",
     "vuelidate": "^0.6.1",

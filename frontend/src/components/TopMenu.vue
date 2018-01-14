@@ -14,7 +14,7 @@
       <v-toolbar-title v-if="userData">
         Welcome {{ userData.fullName && userData.fullName.trim().length ? userData.fullName : userData.email }}
       </v-toolbar-title>
-      <v-toolbar-items class="hidden-sm-and-down">
+      <v-toolbar-items v-if="userData" class="hidden-sm-and-down">
         <v-btn flat @click="logout">logout</v-btn>
       </v-toolbar-items>
     </v-toolbar>

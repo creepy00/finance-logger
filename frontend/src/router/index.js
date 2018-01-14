@@ -55,6 +55,15 @@ router.beforeEach((to, from, next) => {
     } else {
       next();
     }
+  }).catch(() => {
+    store.dispatch("logout").then(() => {
+      const route = getNextRoute();
+      if (route) {
+        next(route);
+      } else {
+        next();
+      }
+    });
   });
 });
 
